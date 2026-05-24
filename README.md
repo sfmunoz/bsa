@@ -13,20 +13,17 @@ Declarative, agent-oriented host provisioning for Linux x86_64 (systemd-based).
 
 ## What Gets Provisioned
 
-| Component        | Details                              |
-|------------------|--------------------------------------|
-| OS Packages      | `tmux`, `htop`, `gh`, `git`, `zip`, `unzip`, `sqlite3`, `jq` |
-| Locale & TZ      | `en_US.UTF-8`, UTC                   |
-| Neovim           | Latest stable → `/opt/nvim-linux-x86_64` |
-| Go               | Latest stable → `/opt/go`            |
+- **OS packages** — core CLI utilities (`tmux`, `htop`, `gh`, `git`, `zip`, `unzip`, `sqlite3`, `jq`)
+- **System config** — `en_US.UTF-8` locale, `UTC` timezone
+- **Developer tools** — Neovim (latest, binary install), Go (latest, binary install)
+
+See [`INSTALL.md`](INSTALL.md) for the full specification.
 
 ## Usage
-
-Run the plan with any capable AI agent:
 
 ```bash
 # Agent reads INSTALL.md and provisions accordingly
 # No manual commands needed — the agent handles everything
 ```
 
-Agent prerequisites: `sudo` access, internet connectivity, standard `PATH`.
+Prerequisites: `sudo` access, internet connectivity, standard `PATH`.
