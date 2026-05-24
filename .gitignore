@@ -1,0 +1,17 @@
+# OS junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Editor dirs
+.vscode/
+.idea/
+*.sublime-*
+
+# Temp / cache
+__pycache__/
+*.py[cod]
+.env
+*.tar.gz
