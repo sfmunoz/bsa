@@ -46,6 +46,9 @@
 #     - The output must be dump to stdout in both cases (as it is now)
 # [X] Debug support
 #     - When debug flag is enabled the prompt must be sent to log (one line at a time)
+# [ ] Multi-model support (to be detailed)
+# [ ] Auto-modification support applying the patch (to be detailed)
+# [ ] Auto-commit support (to be detailed)
 #
 # }}}
 # --------------------------------------
