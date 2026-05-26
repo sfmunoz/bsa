@@ -35,6 +35,15 @@
 #     - Call it from 'BSA.run()'
 # [X] Delete BSA.__counter() and related stuff
 # [X] Apply code conventions added to the instructions in this file (Code conventions within AI agent instructions)
+# [ ] Auto-patch support
+#     - If there's stdin data use it as prompt
+#     - If there is not stdin data build it with the following content
+#       - Generate a "diff" output that can be used by "patch" tool to modify the file which will follow
+#       - The instructions for the agent are included in the file
+#       - ==== BEGIN ====
+#       - the content of this file (bsa.py) must be included here
+#       - ---- END ----
+#     - The output must be dump to stdout in both cases (as it is now)
 #
 # }}}
 # --------------------------------------
