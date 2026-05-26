@@ -13,6 +13,10 @@
 # - Apply what's defined in the Changes section
 #   - [X] Marks a completed change — skip it
 #   - [ ] Marks a pending change — process only the first one
+# - Code conventions:
+#   - BSA class must be the last one in the file
+#   - run() method must be the last one if the class implements it
+#   - for multiline dictionaries, function calls, etc. the last always has a trailing comma
 #
 # }}}
 # {{{ Changes
@@ -30,6 +34,7 @@
 #     - Ref: https://opencode.ai/docs/go/
 #     - Call it from 'BSA.run()'
 # [X] Delete BSA.__counter() and related stuff
+# [ ] Apply code conventions added to the instructions in this file (Code conventions within AI agent instructions)
 #
 # }}}
 # --------------------------------------
