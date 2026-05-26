@@ -44,7 +44,7 @@
 #       - the content of this file (bsa.py) must be included here
 #       - ---- END ----
 #     - The output must be dump to stdout in both cases (as it is now)
-# [ ] Debug support
+# [X] Debug support
 #     - When debug flag is enabled the prompt must be sent to log (one line at a time)
 #
 # }}}
@@ -131,6 +131,9 @@ class OpenCodeGoDeepSeekV4Flash(object):
             if not prompt.strip():
                 log.error("No input data on stdin")
                 sys.exit(1)
+        if self.__args.debug:
+            for line in prompt.splitlines():
+                log.debug(line)
         response = self.__call_api(prompt)
         sys.stdout.write(response)
 
