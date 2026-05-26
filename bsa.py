@@ -43,6 +43,14 @@ class BSA(object):
 
     def run(self):
         log.info("BSA.run()")
+        self.__counter(20)
+
+# }}}
+# {{{ BSA.__counter()
+
+    def __counter(self, tot):
+        for i in range(1, tot + 1):
+            log.info(">> %d", i)
 
 # }}}
 # -------- main --------
