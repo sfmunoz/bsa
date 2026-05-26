@@ -34,7 +34,7 @@
 #     - Ref: https://opencode.ai/docs/go/
 #     - Call it from 'BSA.run()'
 # [X] Delete BSA.__counter() and related stuff
-# [ ] Apply code conventions added to the instructions in this file (Code conventions within AI agent instructions)
+# [X] Apply code conventions added to the instructions in this file (Code conventions within AI agent instructions)
 #
 # }}}
 # --------------------------------------
@@ -49,6 +49,58 @@ from logging import getLogger, basicConfig, INFO, DEBUG
 
 basicConfig(format='%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(message)s (%(module)s:%(lineno)d)',level=INFO,stream=sys.stderr)
 log = getLogger(__name__)
+
+# }}}
+# -------- OpenCodeGoDeepSeekV4Flash(object) -- class --------
+# {{{ OpenCodeGoDeepSeekV4Flash -- class
+
+class OpenCodeGoDeepSeekV4Flash(object):
+
+# }}}
+# {{{ OpenCodeGoDeepSeekV4Flash.__init__()
+
+    def __init__(self, args):
+        log.info("OpenCodeGoDeepSeekV4Flash.__init__()")
+        self.__args = args
+        self.__api_key: str = os.environ.get("OPENCODE_GO_API_KEY", "")
+        if not self.__api_key:
+            log.error("OPENCODE_GO_API_KEY environment variable not set")
+            sys.exit(1)
+
+# }}}
+# {{{ OpenCodeGoDeepSeekV4Flash.__call_api()
+
+    def __call_api(self, prompt):
+        payload = {
+            "model": "deepseek-v4-flash",
+            "messages": [{"role": "user", "content": prompt}],
+        }
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            "https://opencode.ai/zen/go/v1/chat/completions",
+            data=data,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + self.__api_key,
+                "User-Agent": "bsa-agent/0.0.1",
+            },
+        )
+        log.info("Calling OpenCode Go API (deepseek-v4-flash)...")
+        with urllib.request.urlopen(req) as resp:
+            result = json.loads(resp.read().decode("utf-8"))
+        return result["choices"][0]["message"]["content"]
+
+# }}}
+# {{{ OpenCodeGoDeepSeekV4Flash.run()
+
+    def run(self):
+        log.info("OpenCodeGoDeepSeekV4Flash.run()")
+        prompt = sys.stdin.read()
+        if not prompt.strip():
+            log.error("No input data on stdin")
+            sys.exit(1)
+        response = self.__call_api(prompt)
+        sys.stdout.write(response)
 
 # }}}
 # -------- BSA(object) -- class --------
@@ -70,57 +122,6 @@ class BSA(object):
         log.info("BSA.run()")
         if not sys.stdin.isatty():
             OpenCodeGoDeepSeekV4Flash(self.__args).run()
-# }}}
-# -------- OpenCodeGoDeepSeekV4Flash(object) -- class --------
-# {{{ OpenCodeGoDeepSeekV4Flash -- class
-
-class OpenCodeGoDeepSeekV4Flash(object):
-
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.__init__()
-
-    def __init__(self, args):
-        log.info("OpenCodeGoDeepSeekV4Flash.__init__()")
-        self.__args = args
-        self.__api_key: str = os.environ.get("OPENCODE_GO_API_KEY", "")
-        if not self.__api_key:
-            log.error("OPENCODE_GO_API_KEY environment variable not set")
-            sys.exit(1)
-
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.run()
-
-    def run(self):
-        log.info("OpenCodeGoDeepSeekV4Flash.run()")
-        prompt = sys.stdin.read()
-        if not prompt.strip():
-            log.error("No input data on stdin")
-            sys.exit(1)
-        response = self.__call_api(prompt)
-        sys.stdout.write(response)
-
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.__call_api()
-
-    def __call_api(self, prompt):
-        payload = {
-            "model": "deepseek-v4-flash",
-            "messages": [{"role": "user", "content": prompt}]
-        }
-        data = json.dumps(payload).encode("utf-8")
-        req = urllib.request.Request(
-            "https://opencode.ai/zen/go/v1/chat/completions",
-            data=data,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + self.__api_key,
-                "User-Agent": "bsa-agent/0.0.1"
-            }
-        )
-        log.info("Calling OpenCode Go API (deepseek-v4-flash)...")
-        with urllib.request.urlopen(req) as resp:
-            result = json.loads(resp.read().decode("utf-8"))
-        return result["choices"][0]["message"]["content"]
 
 # }}}
 # -------- main --------
@@ -129,11 +130,11 @@ class OpenCodeGoDeepSeekV4Flash(object):
 if __name__ == "__main__":
     parser = ArgumentParser(
         description = 'main.py (v1.0)',
-        epilog = "sfmunoz (C) 2026"
+        epilog = "sfmunoz (C) 2026",
     )
 
     parser.add_argument('-d', '--debug', action='store_true',
-                        help='enable debug mode')
+                        help='enable debug mode',)
 
     args = parser.parse_args()
 
