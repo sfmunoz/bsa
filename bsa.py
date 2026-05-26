@@ -29,6 +29,7 @@
 #     - Use "log" object to show progress if needed
 #     - Ref: https://opencode.ai/docs/go/
 #     - Call it from 'BSA.run()'
+# [ ] Delete BSA.__counter() and related stuff
 #
 # }}}
 # --------------------------------------
