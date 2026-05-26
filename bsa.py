@@ -44,6 +44,8 @@
 #       - the content of this file (bsa.py) must be included here
 #       - ---- END ----
 #     - The output must be dump to stdout in both cases (as it is now)
+# [ ] Debug support
+#     - When debug flag is enabled the prompt must be sent to log (one line at a time)
 #
 # }}}
 # --------------------------------------
