@@ -35,7 +35,7 @@
 #     - Call it from 'BSA.run()'
 # [X] Delete BSA.__counter() and related stuff
 # [X] Apply code conventions added to the instructions in this file (Code conventions within AI agent instructions)
-# [ ] Auto-patch support
+# [X] Auto-patch support
 #     - If there's stdin data use it as prompt
 #     - If there is not stdin data build it with the following content
 #       - Generate a "diff" output that can be used by "patch" tool to modify the file which will follow
@@ -99,15 +99,36 @@ class OpenCodeGoDeepSeekV4Flash(object):
             result = json.loads(resp.read().decode("utf-8"))
         return result["choices"][0]["message"]["content"]
 
+# }}}}
+# {{{ OpenCodeGoDeepSeekV4Flash.__build_auto_patch_prompt()
+
+    def __build_auto_patch_prompt(self):
+        script_path = os.path.realpath(__file__)
+        with open(script_path, 'r') as f:
+            content = f.read()
+        return (
+            "Generate a diff output that can be used by patch tool to modify "
+            "the file which follows.\n"
+            "The instructions for the agent are included in the file.\n"
+            "\n"
+            "==== BEGIN ====\n"
+            f"{content}\n"
+            "---- END ----"
+        )
+
 # }}}
 # {{{ OpenCodeGoDeepSeekV4Flash.run()
 
     def run(self):
         log.info("OpenCodeGoDeepSeekV4Flash.run()")
-        prompt = sys.stdin.read()
-        if not prompt.strip():
-            log.error("No input data on stdin")
-            sys.exit(1)
+        if sys.stdin.isatty():
+            log.info("No stdin pipe, building auto-patch prompt")
+            prompt = self.__build_auto_patch_prompt()
+        else:
+            prompt = sys.stdin.read()
+            if not prompt.strip():
+                log.error("No input data on stdin")
+                sys.exit(1)
         response = self.__call_api(prompt)
         sys.stdout.write(response)
 
@@ -129,8 +150,7 @@ class BSA(object):
 
     def run(self):
         log.info("BSA.run()")
-        if not sys.stdin.isatty():
-            OpenCodeGoDeepSeekV4Flash(self.__args).run()
+        OpenCodeGoDeepSeekV4Flash(self.__args).run()
 
 # }}}
 # -------- main --------
