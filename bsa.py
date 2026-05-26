@@ -29,7 +29,7 @@
 #     - Use "log" object to show progress if needed
 #     - Ref: https://opencode.ai/docs/go/
 #     - Call it from 'BSA.run()'
-# [ ] Delete BSA.__counter() and related stuff
+# [X] Delete BSA.__counter() and related stuff
 #
 # }}}
 # --------------------------------------
@@ -65,16 +65,6 @@ class BSA(object):
         log.info("BSA.run()")
         if not sys.stdin.isatty():
             OpenCodeGoDeepSeekV4Flash(self.__args).run()
-        else:
-            self.__counter(20)
-
-# }}}
-# {{{ BSA.__counter()
-
-    def __counter(self, tot):
-        for i in range(1, tot + 1):
-            log.info(">> %d", i)
-
 # }}}
 # -------- OpenCodeGoDeepSeekV4Flash(object) -- class --------
 # {{{ OpenCodeGoDeepSeekV4Flash -- class
