@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # vim: set foldmethod=marker:
 
-# {{{ agent instructions
+# {{{ AI agent instructions
 #
 # - The only context required to make changes is this file -> ignore other files in the project
 # - The only file to change is this one (nothing else)
@@ -10,9 +10,25 @@
 # - Don't create standalone functions -> everything must be contained in classes
 # - Only use Python3 standard library -> no external libraries
 # - Don't add comments unless it is unavoidable to describe some critical part
-# - Next change to make:
-#   - Create BSA.__counter(self, tot) which runs "log.info()" to output ">> <number>" from 1 to tot (inclusive)
-#   - Call it from BSA.run() to show 20 lines
+# - Apply what's defined in the Changes section
+#   - [X] Marks a completed change — skip it
+#   - [ ] Marks a pending change — process only the first one
+#
+# }}}
+# {{{ Changes
+#
+# [X] Add counter method
+#     - Create BSA.__counter(self, tot) which runs "log.info()" to output ">> <number>" from 1 to tot (inclusive)
+#     - Call it from BSA.run() to show 20 lines
+# [ ] Add support for calling OpenCode Go -> "deepseek-v4-flash" model
+#     - Do it in a class with name 'OpenCodeGoDeepSeekV4Flash'
+#       - 'OpenCodeGoDeepSeekV4Flash.run()' orchestrates execution (like BSA.run())
+#       - Create other private methods as needed
+#     - Input: data read from stdin by bsa.py
+#     - Output: bsa.py must write to stdout
+#     - Use "log" object to show progress if needed
+#     - Ref: https://opencode.ai/docs/go/
+#     - Call it from 'BSA.run()'
 #
 # }}}
 # --------------------------------------
