@@ -57,6 +57,11 @@
 #     - The complete body of the output (JSON) must be sent to 'log.debug()'
 #     - The body must be formatted using something like 'json.dumps(...,indent=2,sort_keys=True)'
 #     - The resulting string must be sent to 'log.debug()' (one line at a time)
+# [ ] Create 'OpenCodeGoDeepSeekV4Flash.__write_self()'
+#     - It's 'OpenCodeGoDeepSeekV4Flash.__read_self()' counterpart
+#     - Must be used when 'OpenCodeGoDeepSeekV4Flash.__read_self()' is used
+#     - Writes the model output to the same file the input was read from
+#     - When model-input is read from stdin, model-output is written to stdout (as it is now)
 # [ ] Multi-model support (to be detailed)
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
