@@ -46,6 +46,10 @@
 #     - The output must be dump to stdout in both cases (as it is now)
 # [X] Debug support
 #     - When debug flag is enabled the prompt must be sent to log (one line at a time)
+# [ ] Script-in, script-out
+#     - The model must receive exactly the full file. Nothing more, nothing less
+#     - The model must return exactly the modified full file. Nothing more, nothing less
+#     - stdin processing behaviour is the same: if content is provided over stdin use that
 # [ ] Multi-model support (to be detailed)
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
