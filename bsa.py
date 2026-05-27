@@ -57,7 +57,7 @@
 #     - The complete body of the output (JSON) must be sent to 'log.debug()'
 #     - The body must be formatted using something like 'json.dumps(...,indent=2,sort_keys=True)'
 #     - The resulting string must be sent to 'log.debug()' (one line at a time)
-# [ ] Create 'OpenCodeGoDeepSeekV4Flash.__write_self()'
+# [X] Create 'OpenCodeGoDeepSeekV4Flash.__write_self()'
 #     - It's 'OpenCodeGoDeepSeekV4Flash.__read_self()' counterpart
 #     - Must be used when 'OpenCodeGoDeepSeekV4Flash.__read_self()' is used
 #     - Writes the model output to the same file the input was read from
@@ -131,11 +131,21 @@ class OpenCodeGoDeepSeekV4Flash(object):
             return f.read()
 
 # }}}
+# {{{ OpenCodeGoDeepSeekV4Flash.__write_self()
+
+    def __write_self(self, content):
+        script_path = os.path.realpath(__file__)
+        log.info("Writing model output to %s", script_path)
+        with open(script_path, 'w') as f:
+            f.write(content)
+
+# }}}
 # {{{ OpenCodeGoDeepSeekV4Flash.run()
 
     def run(self):
         log.info("OpenCodeGoDeepSeekV4Flash.run()")
-        if sys.stdin.isatty():
+        is_self = sys.stdin.isatty()
+        if is_self:
             log.info("No stdin pipe, reading self for script-in")
             prompt = self.__read_self()
         else:
@@ -152,7 +162,10 @@ class OpenCodeGoDeepSeekV4Flash(object):
             formatted = json.dumps(api_response, indent=2, sort_keys=True)
             for line in formatted.splitlines():
                 log.debug(line)
-        sys.stdout.write(content)
+        if is_self:
+            self.__write_self(content)
+        else:
+            sys.stdout.write(content)
 
 # }}}
 # -------- BSA(object) -- class --------
