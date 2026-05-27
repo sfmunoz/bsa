@@ -64,7 +64,7 @@
 #     - Must be used when 'OpenCodeGoDeepSeekV4Flash.__read_self()' is used
 #     - Writes the model output to the same file the input was read from
 #     - When model-input is read from stdin, model-output is written to stdout (as it is now)
-# [ ] Add dry-run support
+# [X] Add dry-run support
 #     - Command line flag: '-n' / '--dry-run'
 #     - When enabled no interaction with the model is carried out
 #       - Program stops right before that moment
@@ -147,10 +147,9 @@ class OpenCodeGoDeepSeekV4Flash(object):
             f.write(content)
 
 # }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.run()
+# {{{ OpenCodeGoDeepSeekV4Flash.__prepare_prompt()
 
-    def run(self):
-        log.info("OpenCodeGoDeepSeekV4Flash.run()")
+    def __prepare_prompt(self):
         is_self = sys.stdin.isatty()
         if is_self:
             log.info("No stdin pipe, reading self for script-in")
@@ -160,19 +159,48 @@ class OpenCodeGoDeepSeekV4Flash(object):
             if not prompt.strip():
                 log.error("No input data on stdin")
                 sys.exit(1)
+        return is_self, prompt
+
+# }}}
+# {{{ OpenCodeGoDeepSeekV4Flash.__debug_prompt()
+
+    def __debug_prompt(self, prompt):
         if self.__args.debug:
             for line in prompt.splitlines():
                 log.debug(line)
-        api_response = self.__call_api(prompt)
-        content = api_response["choices"][0]["message"]["content"]
+
+# }}}
+# {{{ OpenCodeGoDeepSeekV4Flash.__debug_response()
+
+    def __debug_response(self, api_response):
         if self.__args.debug:
             formatted = json.dumps(api_response, indent=2, sort_keys=True)
             for line in formatted.splitlines():
                 log.debug(line)
+
+# }}}
+# {{{ OpenCodeGoDeepSeekV4Flash.__write_output()
+
+    def __write_output(self, content, is_self):
         if is_self:
             self.__write_self(content)
         else:
             sys.stdout.write(content)
+
+# }}}
+# {{{ OpenCodeGoDeepSeekV4Flash.run()
+
+    def run(self):
+        log.info("OpenCodeGoDeepSeekV4Flash.run()")
+        is_self, prompt = self.__prepare_prompt()
+        self.__debug_prompt(prompt)
+        if self.__args.dry_run:
+            log.info("Dry-run mode enabled; no API call will be made.")
+            sys.exit(0)
+        api_response = self.__call_api(prompt)
+        content = api_response["choices"][0]["message"]["content"]
+        self.__debug_response(api_response)
+        self.__write_output(content, is_self)
 
 # }}}
 # -------- BSA(object) -- class --------
@@ -206,6 +234,8 @@ if __name__ == "__main__":
 
     parser.add_argument('-d', '--debug', action='store_true',
                         help='enable debug mode',)
+    parser.add_argument('-n', '--dry-run', action='store_true',
+                        help='enable dry run mode (no API call)',)
 
     args = parser.parse_args()
 
