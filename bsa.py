@@ -64,6 +64,11 @@
 #     - Must be used when 'OpenCodeGoDeepSeekV4Flash.__read_self()' is used
 #     - Writes the model output to the same file the input was read from
 #     - When model-input is read from stdin, model-output is written to stdout (as it is now)
+# [ ] Add dry-run support
+#     - Command line flag: '-n' / '--dry-run'
+#     - When enabled no interaction with the model is carried out
+#       - Program stops right before that moment
+#       - It must show a message explaining dry-run flag is on
 # [ ] Multi-model support (to be detailed)
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
