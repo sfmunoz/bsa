@@ -46,7 +46,7 @@
 #     - The output must be dump to stdout in both cases (as it is now)
 # [X] Debug support
 #     - When debug flag is enabled the prompt must be sent to log (one line at a time)
-# [ ] Script-in, script-out
+# [X] Script-in, script-out
 #     - The model must receive exactly the full file. Nothing more, nothing less
 #     - The model must return exactly the modified full file. Nothing more, nothing less
 #     - stdin processing behaviour is the same: if content is provided over stdin use that
@@ -112,21 +112,12 @@ class OpenCodeGoDeepSeekV4Flash(object):
         return result["choices"][0]["message"]["content"]
 
 # }}}}
-# {{{ OpenCodeGoDeepSeekV4Flash.__build_auto_patch_prompt()
+# {{{ OpenCodeGoDeepSeekV4Flash.__read_self()
 
-    def __build_auto_patch_prompt(self):
+    def __read_self(self):
         script_path = os.path.realpath(__file__)
         with open(script_path, 'r') as f:
-            content = f.read()
-        return (
-            "Generate a diff output that can be used by patch tool to modify "
-            "the file which follows.\n"
-            "The instructions for the agent are included in the file.\n"
-            "\n"
-            "==== BEGIN ====\n"
-            f"{content}\n"
-            "---- END ----"
-        )
+            return f.read()
 
 # }}}
 # {{{ OpenCodeGoDeepSeekV4Flash.run()
@@ -134,8 +125,8 @@ class OpenCodeGoDeepSeekV4Flash(object):
     def run(self):
         log.info("OpenCodeGoDeepSeekV4Flash.run()")
         if sys.stdin.isatty():
-            log.info("No stdin pipe, building auto-patch prompt")
-            prompt = self.__build_auto_patch_prompt()
+            log.info("No stdin pipe, reading self for script-in")
+            prompt = self.__read_self()
         else:
             prompt = sys.stdin.read()
             if not prompt.strip():
