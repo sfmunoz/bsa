@@ -175,7 +175,7 @@ class BSA(object):
 
 if __name__ == "__main__":
     parser = ArgumentParser(
-        description = 'main.py (v1.0)',
+        description = 'bsa.py (v0.0.1)',
         epilog = "sfmunoz (C) 2026",
     )
 
