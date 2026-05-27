@@ -49,6 +49,9 @@
 # [ ] Multi-model support (to be detailed)
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
+# [ ] Stream support when interacting with the model
+# [ ] Error handling support (feed it to the model)
+# [ ] Send the response of the model to 'log.debug()'
 #
 # }}}
 # --------------------------------------
