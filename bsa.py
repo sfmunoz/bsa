@@ -52,7 +52,7 @@
 #     - The model must receive exactly the full file. Nothing more, nothing less
 #     - The model must return exactly the modified full file. Nothing more, nothing less
 #     - stdin processing behaviour is the same: if content is provided over stdin use that
-# [ ] Send the response of the model to 'log.debug()'
+# [X] Send the response of the model to 'log.debug()'
 #     - When debug is enabled the output must be sent to 'log.debug()'
 #     - The complete body of the output (JSON) must be sent to 'log.debug()'
 #     - The body must be formatted using something like 'json.dumps(...,indent=2,sort_keys=True)'
@@ -115,9 +115,9 @@ class OpenCodeGoDeepSeekV4Flash(object):
         log.info("Calling OpenCode Go API (deepseek-v4-flash)...")
         with urllib.request.urlopen(req) as resp:
             result = json.loads(resp.read().decode("utf-8"))
-        return result["choices"][0]["message"]["content"]
+        return result
 
-# }}}}
+# }}}
 # {{{ OpenCodeGoDeepSeekV4Flash.__read_self()
 
     def __read_self(self):
@@ -141,8 +141,13 @@ class OpenCodeGoDeepSeekV4Flash(object):
         if self.__args.debug:
             for line in prompt.splitlines():
                 log.debug(line)
-        response = self.__call_api(prompt)
-        sys.stdout.write(response)
+        api_response = self.__call_api(prompt)
+        content = api_response["choices"][0]["message"]["content"]
+        if self.__args.debug:
+            formatted = json.dumps(api_response, indent=2, sort_keys=True)
+            for line in formatted.splitlines():
+                log.debug(line)
+        sys.stdout.write(content)
 
 # }}}
 # -------- BSA(object) -- class --------
