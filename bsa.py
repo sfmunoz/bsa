@@ -52,12 +52,16 @@
 #     - The model must receive exactly the full file. Nothing more, nothing less
 #     - The model must return exactly the modified full file. Nothing more, nothing less
 #     - stdin processing behaviour is the same: if content is provided over stdin use that
+# [ ] Send the response of the model to 'log.debug()'
+#     - When debug is enabled the output must be sent to 'log.debug()'
+#     - The complete body of the output (JSON) must be sent to 'log.debug()'
+#     - The body must be formatted using something like 'json.dumps(...,indent=2,sort_keys=True)'
+#     - The resulting string must be sent to 'log.debug()' (one line at a time)
 # [ ] Multi-model support (to be detailed)
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
 # [ ] Stream support when interacting with the model
 # [ ] Error handling support (feed it to the model)
-# [ ] Send the response of the model to 'log.debug()'
 #
 # }}}
 # --------------------------------------
