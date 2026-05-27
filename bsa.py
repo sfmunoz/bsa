@@ -7,6 +7,8 @@
 # - The only file to change is this one: nothing else
 # - The only input provided to the model is this file: nothing else
 # - The only output returned by the model must be the updated file: nothing else
+#   - Don't include markup at the top (e.g. "```python")
+#   - Don't include markup at the bottom (e.g. "```")
 # - Keep the file style as it is when you make changes
 # - Methods must have fewer than 25 lines -> create other methods as required
 # - Don't create standalone functions -> everything must be contained in classes
