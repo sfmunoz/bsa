@@ -97,14 +97,53 @@ import sys
 import urllib.request
 from argparse import ArgumentParser, Namespace
 from logging import getLogger, basicConfig, INFO, DEBUG, Logger
-from typing import Tuple
-
 basicConfig(
     format="%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(message)s",
     level=INFO,
     stream=sys.stderr,
 )
 log: Logger = getLogger(__name__)
+
+# }}}
+# -------- Prompt(object) -- class --------
+# {{{ Prompt -- class
+
+class Prompt(object):
+    # }}}
+    # {{{ Prompt.__init__()
+
+    def __init__(self) -> None:
+        log.info("Prompt.__init__()")
+        self.__path: str = os.path.realpath(__file__)
+        self.__from_stdin: bool = not sys.stdin.isatty()
+
+    # }}}
+    # {{{ Prompt.__read_self()
+
+    def __read_self(self) -> str:
+        with open(self.__path, "r") as f:
+            return f.read()
+
+    # }}}
+    # {{{ Prompt.build()
+
+    def build(self) -> str:
+        if self.__from_stdin:
+            prompt: str = sys.stdin.read()
+            if not prompt.strip():
+                log.error("No input data on stdin")
+                sys.exit(1)
+            return prompt
+        log.info("No stdin pipe, reading self for script-in")
+        return self.__read_self()
+
+    # }}}
+    # {{{ Prompt.from_self
+
+    @property
+    def from_self(self) -> bool:
+        return not self.__from_stdin
+
 
 # }}}
 # -------- OpenCodeGoDeepSeekV4Flash(object) -- class --------
@@ -147,14 +186,6 @@ class OpenCodeGoDeepSeekV4Flash(object):
         return result
 
     # }}}
-    # {{{ OpenCodeGoDeepSeekV4Flash.__read_self()
-
-    def __read_self(self) -> str:
-        script_path: str = os.path.realpath(__file__)
-        with open(script_path, "r") as f:
-            return f.read()
-
-    # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.__write_self()
 
     def __write_self(self, content: str) -> None:
@@ -162,22 +193,6 @@ class OpenCodeGoDeepSeekV4Flash(object):
         log.info("Writing model output to %s", script_path)
         with open(script_path, "w") as f:
             f.write(content)
-
-    # }}}
-    # {{{ OpenCodeGoDeepSeekV4Flash.__prepare_prompt()
-
-    def __prepare_prompt(self) -> Tuple[bool, str]:
-        is_self: bool = sys.stdin.isatty()
-        prompt: str
-        if is_self:
-            log.info("No stdin pipe, reading self for script-in")
-            prompt = self.__read_self()
-        else:
-            prompt = sys.stdin.read()
-            if not prompt.strip():
-                log.error("No input data on stdin")
-                sys.exit(1)
-        return is_self, prompt
 
     # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.__debug_prompt()
@@ -225,9 +240,9 @@ class OpenCodeGoDeepSeekV4Flash(object):
 
     def run(self) -> None:
         log.info("OpenCodeGoDeepSeekV4Flash.run()")
-        is_self: bool
-        prompt: str
-        is_self, prompt = self.__prepare_prompt()
+        prompt_obj: Prompt = Prompt()
+        prompt: str = prompt_obj.build()
+        is_self: bool = prompt_obj.from_self
         self.__debug_prompt(prompt)
         if self.__args.dry_run:
             log.info("Dry-run mode enabled; no API call will be made.")
