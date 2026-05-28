@@ -81,6 +81,9 @@
 #   - Every return value of every method must have the type defined
 #   - 'uvx ty check' must finish without warnings/errors
 # [X] Add type to every defined variable
+# [ ] Remove stdin read support and stdout write support
+#     - Remove stdin read support: keep only file-based processing
+#     - Remove stdout write support: keep only file-based writing
 # [ ] Multi-model support (to be detailed)
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
