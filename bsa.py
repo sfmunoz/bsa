@@ -67,7 +67,7 @@
 #     - When enabled no interaction with the model is carried out
 #       - Program stops right before that moment
 #       - It must show a message explaining dry-run flag is on
-# [ ] Verify and remove python markup
+# [X] Verify and remove python markup
 #   - Make sure the first line of the model response is exactly "```python" (without quotes). Exception otherwise
 #   - Make sure the last line of the model response is exactly "```" (without quotes). Exception otherwise
 #   - Remove both the first and the last line
@@ -182,6 +182,21 @@ class OpenCodeGoDeepSeekV4Flash(object):
                 log.debug(line)
 
 # }}}
+# {{{ OpenCodeGoDeepSeekV4Flash.__verify_and_strip_markup()
+
+    def __verify_and_strip_markup(self, content):
+        lines = content.splitlines()
+        if not lines:
+            raise ValueError("Model response is empty")
+        if lines[0].strip() != "```python":
+            raise ValueError("First line is not exactly ```python")
+        if lines[-1].strip() != "```":
+            raise ValueError("Last line is not exactly ```")
+        stripped = "\n".join(lines[1:-1])
+        log.info("Stripped python markup from model response")
+        return stripped
+
+# }}}
 # {{{ OpenCodeGoDeepSeekV4Flash.__write_output()
 
     def __write_output(self, content, is_self):
@@ -203,6 +218,11 @@ class OpenCodeGoDeepSeekV4Flash(object):
         api_response = self.__call_api(prompt)
         content = api_response["choices"][0]["message"]["content"]
         self.__debug_response(api_response)
+        try:
+            content = self.__verify_and_strip_markup(content)
+        except ValueError as e:
+            log.error("Response markup verification failed: %s", e)
+            sys.exit(1)
         self.__write_output(content, is_self)
 
 # }}}
