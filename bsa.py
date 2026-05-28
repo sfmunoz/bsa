@@ -33,8 +33,8 @@
 #     - Create BSA.__counter(self, tot) which runs "log.info()" to output ">> <number>" from 1 to tot (inclusive)
 #     - Call it from BSA.run() to show 20 lines
 # [X] Add support for calling OpenCode Go -> "deepseek-v4-flash" model
-#     - Do it in a class with name 'OpenCodeGoDeepSeekV4Flash'
-#       - 'OpenCodeGoDeepSeekV4Flash.run()' orchestrates execution (like BSA.run())
+#     - Do it in a class with name 'OpenAIModel'
+#       - 'OpenAIModel.run()' orchestrates execution (like BSA.run())
 #       - Create other private methods as needed
 #     - Input: data read from stdin by bsa.py
 #     - Output: bsa.py must write to stdout
@@ -63,9 +63,9 @@
 #     - The complete body of the output (JSON) must be sent to 'log.debug()'
 #     - The body must be formatted using something like 'json.dumps(...,indent=2,sort_keys=True)'
 #     - The resulting string must be sent to 'log.debug()' (one line at a time)
-# [X] Create 'OpenCodeGoDeepSeekV4Flash.__write_self()'
-#     - It's 'OpenCodeGoDeepSeekV4Flash.__read_self()' counterpart
-#     - Must be used when 'OpenCodeGoDeepSeekV4Flash.__read_self()' is used
+# [X] Create 'OpenAIModel.__write_self()'
+#     - It's 'OpenAIModel.__read_self()' counterpart
+#     - Must be used when 'OpenAIModel.__read_self()' is used
 #     - Writes the model output to the same file the input was read from
 #     - When model-input is read from stdin, model-output is written to stdout (as it is now)
 # [X] Add dry-run support
@@ -86,7 +86,9 @@
 # [X] Remove stdin read support and stdout write support
 #     - Remove stdin read support: keep only file-based processing
 #     - Remove stdout write support: keep only file-based writing
-# [ ] Multi-model support (to be detailed)
+# [X] Multi-model support preparation
+#     - Rename OpenCodeGoDeepSeekV4Flash() to OpenAIModel()
+# [ ] Multi-model support
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
 # [ ] Stream support when interacting with the model
@@ -139,16 +141,16 @@ class Prompt(object):
 
 
 # }}}
-# -------- OpenCodeGoDeepSeekV4Flash(object) -- class --------
-# {{{ OpenCodeGoDeepSeekV4Flash -- class
+# -------- OpenAIModel(object) -- class --------
+# {{{ OpenAIModel -- class
 
 
-class OpenCodeGoDeepSeekV4Flash(object):
+class OpenAIModel(object):
     # }}}
-    # {{{ OpenCodeGoDeepSeekV4Flash.__init__()
+    # {{{ OpenAIModel.__init__()
 
     def __init__(self, args: Namespace) -> None:
-        log.info("OpenCodeGoDeepSeekV4Flash.__init__()")
+        log.info("OpenAIModel.__init__()")
         self.__args: Namespace = args
         self.__api_key: str = os.environ.get("OPENCODE_GO_API_KEY", "")
         if not self.__api_key:
@@ -156,7 +158,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
             sys.exit(1)
 
     # }}}
-    # {{{ OpenCodeGoDeepSeekV4Flash.__call_api()
+    # {{{ OpenAIModel.__call_api()
 
     def __call_api(self, prompt: str) -> dict:
         payload: dict = {
@@ -179,7 +181,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
         return result
 
     # }}}
-    # {{{ OpenCodeGoDeepSeekV4Flash.__write_self()
+    # {{{ OpenAIModel.__write_self()
 
     def __write_self(self, content: str) -> None:
         script_path: str = os.path.realpath(__file__)
@@ -188,7 +190,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
             f.write(content)
 
     # }}}
-    # {{{ OpenCodeGoDeepSeekV4Flash.__debug_prompt()
+    # {{{ OpenAIModel.__debug_prompt()
 
     def __debug_prompt(self, prompt: str) -> None:
         if self.__args.debug:
@@ -196,7 +198,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
                 log.debug(line)
 
     # }}}
-    # {{{ OpenCodeGoDeepSeekV4Flash.__debug_response()
+    # {{{ OpenAIModel.__debug_response()
 
     def __debug_response(self, api_response: dict) -> None:
         if self.__args.debug:
@@ -205,7 +207,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
                 log.debug(line)
 
     # }}}
-    # {{{ OpenCodeGoDeepSeekV4Flash.__verify_and_strip_markup()
+    # {{{ OpenAIModel.__verify_and_strip_markup()
 
     def __verify_and_strip_markup(self, content: str) -> str:
         lines: list[str] = content.splitlines()
@@ -220,10 +222,10 @@ class OpenCodeGoDeepSeekV4Flash(object):
         return stripped
 
     # }}}
-    # {{{ OpenCodeGoDeepSeekV4Flash.run()
+    # {{{ OpenAIModel.run()
 
     def run(self) -> None:
-        log.info("OpenCodeGoDeepSeekV4Flash.run()")
+        log.info("OpenAIModel.run()")
         prompt_obj: Prompt = Prompt()
         prompt: str = prompt_obj.build()
         self.__debug_prompt(prompt)
@@ -259,7 +261,7 @@ class BSA(object):
 
     def run(self) -> None:
         log.info("BSA.run()")
-        OpenCodeGoDeepSeekV4Flash(self.__args).run()
+        OpenAIModel(self.__args).run()
 
 
 # }}}
