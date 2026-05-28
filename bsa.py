@@ -89,7 +89,7 @@ import urllib.request
 from argparse import ArgumentParser
 from logging import getLogger, basicConfig, INFO, DEBUG
 
-basicConfig(format='%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(message)s (%(module)s:%(lineno)d)',level=INFO,stream=sys.stderr)
+basicConfig(format='%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(message)s',level=INFO,stream=sys.stderr)
 log = getLogger(__name__)
 
 # }}}
