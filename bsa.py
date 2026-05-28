@@ -88,7 +88,7 @@
 #     - Remove stdout write support: keep only file-based writing
 # [X] Multi-model support preparation
 #     - Rename OpenCodeGoDeepSeekV4Flash() to OpenAIModel()
-# [ ] Multi-model support
+# [X] Multi-model support
 #     - Add -m/--model command line argument with the following choices
 #       - deepseek-v4-flash -> default model to use
 #       - deepseek-v4-pro
@@ -173,7 +173,7 @@ class OpenAIModel(object):
 
     def __call_api(self, prompt: str) -> dict:
         payload: dict = {
-            "model": "deepseek-v4-flash",
+            "model": self.__args.model,
             "messages": [{"role": "user", "content": prompt}],
         }
         data: bytes = json.dumps(payload).encode("utf-8")
@@ -186,7 +186,7 @@ class OpenAIModel(object):
                 "User-Agent": "bsa-agent/0.0.1",
             },
         )
-        log.info("Calling OpenCode Go API (deepseek-v4-flash)...")
+        log.info("Calling OpenCode Go API (%s)...", self.__args.model)
         with urllib.request.urlopen(req) as resp:
             result: dict = json.loads(resp.read().decode("utf-8"))
         return result
@@ -296,6 +296,13 @@ if __name__ == "__main__":
         "--dry-run",
         action="store_true",
         help="enable dry run mode (no API call)",
+    )
+    parser.add_argument(
+        "-m",
+        "--model",
+        choices=["deepseek-v4-flash", "deepseek-v4-pro", "glm-5", "glm-5.1", "kimi-k2.5", "kimi-k2.6", "mimo-v2.5", "mimo-v2.5-pro"],
+        default="deepseek-v4-flash",
+        help="model to use for API calls",
     )
 
     args: Namespace = parser.parse_args()
