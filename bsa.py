@@ -72,6 +72,10 @@
 #   - Make sure the last line of the model response is exactly "```" (without quotes). Exception otherwise
 #   - Remove both the first and the last line
 #   - Do this in a new single method
+# [ ] Add type to every argument and return value:
+#   - Every argument of every method must have the type defined
+#   - Every return value of every method must have the type defined
+#   - 'uvx ty check' must finish without warnings/errors
 # [ ] Multi-model support (to be detailed)
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
