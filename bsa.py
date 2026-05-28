@@ -80,7 +80,7 @@
 #   - Every argument of every method must have the type defined
 #   - Every return value of every method must have the type defined
 #   - 'uvx ty check' must finish without warnings/errors
-# [ ] Add type to every defined variable
+# [X] Add type to every defined variable
 # [ ] Multi-model support (to be detailed)
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
@@ -96,7 +96,7 @@ import json
 import sys
 import urllib.request
 from argparse import ArgumentParser, Namespace
-from logging import getLogger, basicConfig, INFO, DEBUG
+from logging import getLogger, basicConfig, INFO, DEBUG, Logger
 from typing import Tuple
 
 basicConfig(
@@ -104,7 +104,7 @@ basicConfig(
     level=INFO,
     stream=sys.stderr,
 )
-log = getLogger(__name__)
+log: Logger = getLogger(__name__)
 
 # }}}
 # -------- OpenCodeGoDeepSeekV4Flash(object) -- class --------
@@ -117,7 +117,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
 
     def __init__(self, args: Namespace) -> None:
         log.info("OpenCodeGoDeepSeekV4Flash.__init__()")
-        self.__args = args
+        self.__args: Namespace = args
         self.__api_key: str = os.environ.get("OPENCODE_GO_API_KEY", "")
         if not self.__api_key:
             log.error("OPENCODE_GO_API_KEY environment variable not set")
@@ -127,12 +127,12 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # {{{ OpenCodeGoDeepSeekV4Flash.__call_api()
 
     def __call_api(self, prompt: str) -> dict:
-        payload = {
+        payload: dict = {
             "model": "deepseek-v4-flash",
             "messages": [{"role": "user", "content": prompt}],
         }
-        data = json.dumps(payload).encode("utf-8")
-        req = urllib.request.Request(
+        data: bytes = json.dumps(payload).encode("utf-8")
+        req: urllib.request.Request = urllib.request.Request(
             "https://opencode.ai/zen/go/v1/chat/completions",
             data=data,
             headers={
@@ -143,14 +143,14 @@ class OpenCodeGoDeepSeekV4Flash(object):
         )
         log.info("Calling OpenCode Go API (deepseek-v4-flash)...")
         with urllib.request.urlopen(req) as resp:
-            result = json.loads(resp.read().decode("utf-8"))
+            result: dict = json.loads(resp.read().decode("utf-8"))
         return result
 
     # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.__read_self()
 
     def __read_self(self) -> str:
-        script_path = os.path.realpath(__file__)
+        script_path: str = os.path.realpath(__file__)
         with open(script_path, "r") as f:
             return f.read()
 
@@ -158,7 +158,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # {{{ OpenCodeGoDeepSeekV4Flash.__write_self()
 
     def __write_self(self, content: str) -> None:
-        script_path = os.path.realpath(__file__)
+        script_path: str = os.path.realpath(__file__)
         log.info("Writing model output to %s", script_path)
         with open(script_path, "w") as f:
             f.write(content)
@@ -167,7 +167,8 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # {{{ OpenCodeGoDeepSeekV4Flash.__prepare_prompt()
 
     def __prepare_prompt(self) -> Tuple[bool, str]:
-        is_self = sys.stdin.isatty()
+        is_self: bool = sys.stdin.isatty()
+        prompt: str
         if is_self:
             log.info("No stdin pipe, reading self for script-in")
             prompt = self.__read_self()
@@ -191,7 +192,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
 
     def __debug_response(self, api_response: dict) -> None:
         if self.__args.debug:
-            formatted = json.dumps(api_response, indent=2, sort_keys=True)
+            formatted: str = json.dumps(api_response, indent=2, sort_keys=True)
             for line in formatted.splitlines():
                 log.debug(line)
 
@@ -199,14 +200,14 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # {{{ OpenCodeGoDeepSeekV4Flash.__verify_and_strip_markup()
 
     def __verify_and_strip_markup(self, content: str) -> str:
-        lines = content.splitlines()
+        lines: list[str] = content.splitlines()
         if not lines:
             raise ValueError("Model response is empty")
         if lines[0].strip() != "```python":
             raise ValueError("First line is not exactly ```python")
         if lines[-1].strip() != "```":
             raise ValueError("Last line is not exactly ```")
-        stripped = "\n".join(lines[1:-1])
+        stripped: str = "\n".join(lines[1:-1])
         log.info("Stripped python markup from model response")
         return stripped
 
@@ -224,13 +225,15 @@ class OpenCodeGoDeepSeekV4Flash(object):
 
     def run(self) -> None:
         log.info("OpenCodeGoDeepSeekV4Flash.run()")
+        is_self: bool
+        prompt: str
         is_self, prompt = self.__prepare_prompt()
         self.__debug_prompt(prompt)
         if self.__args.dry_run:
             log.info("Dry-run mode enabled; no API call will be made.")
             sys.exit(0)
-        api_response = self.__call_api(prompt)
-        content = api_response["choices"][0]["message"]["content"]
+        api_response: dict = self.__call_api(prompt)
+        content: str = api_response["choices"][0]["message"]["content"]
         self.__debug_response(api_response)
         try:
             content = self.__verify_and_strip_markup(content)
@@ -251,7 +254,7 @@ class BSA(object):
 
     def __init__(self, args: Namespace) -> None:
         log.info("BSA.__init__()")
-        self.__args = args
+        self.__args: Namespace = args
 
     # }}}
     # {{{ BSA.run()
@@ -266,7 +269,7 @@ class BSA(object):
 # {{{ main
 
 if __name__ == "__main__":
-    parser = ArgumentParser(
+    parser: ArgumentParser = ArgumentParser(
         description="bsa.py (v0.0.1)",
         epilog="sfmunoz (C) 2026",
     )
@@ -284,7 +287,7 @@ if __name__ == "__main__":
         help="enable dry run mode (no API call)",
     )
 
-    args = parser.parse_args()
+    args: Namespace = parser.parse_args()
 
     if args.debug:
         log.setLevel(DEBUG)
