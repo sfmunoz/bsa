@@ -153,6 +153,7 @@ class OpenAIModel(object):
         log.info("OpenAIModel.__init__()")
         self.__args: Namespace = args
         self.__api_key: str = os.environ.get("OPENCODE_GO_API_KEY", "")
+        self.__endpoint: str = "https://opencode.ai/zen/go/v1/chat/completions"
         if not self.__api_key:
             log.error("OPENCODE_GO_API_KEY environment variable not set")
             sys.exit(1)
@@ -167,7 +168,7 @@ class OpenAIModel(object):
         }
         data: bytes = json.dumps(payload).encode("utf-8")
         req: urllib.request.Request = urllib.request.Request(
-            "https://opencode.ai/zen/go/v1/chat/completions",
+            self.__endpoint,
             data=data,
             headers={
                 "Content-Type": "application/json",
