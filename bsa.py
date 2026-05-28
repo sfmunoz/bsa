@@ -99,6 +99,9 @@
 #       - mimo-v2.5
 #       - mimo-v2.5-pro
 #     - OpenAIModel must use the '-m/--model' value instead of current hardcoded value
+# [ ] Deep code review
+#     - Review every detail of the code
+#     - Propose the 3 most important changes right after this 'Deep code review' item
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
 # [ ] Stream support when interacting with the model
