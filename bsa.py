@@ -102,7 +102,7 @@
 # [X] Deep code review
 #     - Review every detail of the code
 #     - Propose the 3 most important changes right after this 'Deep code review' item
-# [ ] Change model output processing:
+# [X] Change model output processing:
 #     - Now: check first line is "```python" and last line is "```" and delete them
 #     - New: check there's a line "```python" and  a line "```" and grab the code between these marks
 # [ ] Replace sys.exit() calls in business logic with exceptions
@@ -241,14 +241,22 @@ class OpenAIModel(object):
 
     def __verify_and_strip_markup(self, content: str) -> str:
         lines: list[str] = content.splitlines()
-        if not lines:
-            raise ValueError("Model response is empty")
-        if lines[0].strip() != "```python":
-            raise ValueError("First line is not exactly ```python")
-        if lines[-1].strip() != "```":
-            raise ValueError("Last line is not exactly ```")
-        stripped: str = "\n".join(lines[1:-1])
-        log.info("Stripped python markup from model response")
+        start_idx: int = -1
+        end_idx: int = -1
+        for i, line in enumerate(lines):
+            if line.strip() == "```python":
+                start_idx = i
+                break
+        if start_idx == -1:
+            raise ValueError("No ```python marker found")
+        for i in range(start_idx + 1, len(lines)):
+            if lines[i].strip() == "```":
+                end_idx = i
+                break
+        if end_idx == -1:
+            raise ValueError("No closing ``` marker found")
+        stripped: str = "\n".join(lines[start_idx + 1:end_idx])
+        log.info("Extracted code between python markers")
         return stripped
 
     # }}}
