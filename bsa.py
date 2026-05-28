@@ -89,17 +89,21 @@ import urllib.request
 from argparse import ArgumentParser
 from logging import getLogger, basicConfig, INFO, DEBUG
 
-basicConfig(format='%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(message)s',level=INFO,stream=sys.stderr)
+basicConfig(
+    format="%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(message)s",
+    level=INFO,
+    stream=sys.stderr,
+)
 log = getLogger(__name__)
 
 # }}}
 # -------- OpenCodeGoDeepSeekV4Flash(object) -- class --------
 # {{{ OpenCodeGoDeepSeekV4Flash -- class
 
-class OpenCodeGoDeepSeekV4Flash(object):
 
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.__init__()
+class OpenCodeGoDeepSeekV4Flash(object):
+    # }}}
+    # {{{ OpenCodeGoDeepSeekV4Flash.__init__()
 
     def __init__(self, args):
         log.info("OpenCodeGoDeepSeekV4Flash.__init__()")
@@ -109,8 +113,8 @@ class OpenCodeGoDeepSeekV4Flash(object):
             log.error("OPENCODE_GO_API_KEY environment variable not set")
             sys.exit(1)
 
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.__call_api()
+    # }}}
+    # {{{ OpenCodeGoDeepSeekV4Flash.__call_api()
 
     def __call_api(self, prompt):
         payload = {
@@ -132,25 +136,25 @@ class OpenCodeGoDeepSeekV4Flash(object):
             result = json.loads(resp.read().decode("utf-8"))
         return result
 
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.__read_self()
+    # }}}
+    # {{{ OpenCodeGoDeepSeekV4Flash.__read_self()
 
     def __read_self(self):
         script_path = os.path.realpath(__file__)
-        with open(script_path, 'r') as f:
+        with open(script_path, "r") as f:
             return f.read()
 
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.__write_self()
+    # }}}
+    # {{{ OpenCodeGoDeepSeekV4Flash.__write_self()
 
     def __write_self(self, content):
         script_path = os.path.realpath(__file__)
         log.info("Writing model output to %s", script_path)
-        with open(script_path, 'w') as f:
+        with open(script_path, "w") as f:
             f.write(content)
 
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.__prepare_prompt()
+    # }}}
+    # {{{ OpenCodeGoDeepSeekV4Flash.__prepare_prompt()
 
     def __prepare_prompt(self):
         is_self = sys.stdin.isatty()
@@ -164,16 +168,16 @@ class OpenCodeGoDeepSeekV4Flash(object):
                 sys.exit(1)
         return is_self, prompt
 
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.__debug_prompt()
+    # }}}
+    # {{{ OpenCodeGoDeepSeekV4Flash.__debug_prompt()
 
     def __debug_prompt(self, prompt):
         if self.__args.debug:
             for line in prompt.splitlines():
                 log.debug(line)
 
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.__debug_response()
+    # }}}
+    # {{{ OpenCodeGoDeepSeekV4Flash.__debug_response()
 
     def __debug_response(self, api_response):
         if self.__args.debug:
@@ -181,8 +185,8 @@ class OpenCodeGoDeepSeekV4Flash(object):
             for line in formatted.splitlines():
                 log.debug(line)
 
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.__verify_and_strip_markup()
+    # }}}
+    # {{{ OpenCodeGoDeepSeekV4Flash.__verify_and_strip_markup()
 
     def __verify_and_strip_markup(self, content):
         lines = content.splitlines()
@@ -196,8 +200,8 @@ class OpenCodeGoDeepSeekV4Flash(object):
         log.info("Stripped python markup from model response")
         return stripped
 
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.__write_output()
+    # }}}
+    # {{{ OpenCodeGoDeepSeekV4Flash.__write_output()
 
     def __write_output(self, content, is_self):
         if is_self:
@@ -205,8 +209,8 @@ class OpenCodeGoDeepSeekV4Flash(object):
         else:
             sys.stdout.write(content)
 
-# }}}
-# {{{ OpenCodeGoDeepSeekV4Flash.run()
+    # }}}
+    # {{{ OpenCodeGoDeepSeekV4Flash.run()
 
     def run(self):
         log.info("OpenCodeGoDeepSeekV4Flash.run()")
@@ -225,25 +229,27 @@ class OpenCodeGoDeepSeekV4Flash(object):
             sys.exit(1)
         self.__write_output(content, is_self)
 
+
 # }}}
 # -------- BSA(object) -- class --------
 # {{{ BSA -- class
 
+
 class BSA(object):
+    # }}}
+    # {{{ BSA.__init__()
 
-# }}}
-# {{{ BSA.__init__()
-
-    def __init__(self,args):
+    def __init__(self, args):
         log.info("BSA.__init__()")
         self.__args = args
 
-# }}}
-# {{{ BSA.run()
+    # }}}
+    # {{{ BSA.run()
 
     def run(self):
         log.info("BSA.run()")
         OpenCodeGoDeepSeekV4Flash(self.__args).run()
+
 
 # }}}
 # -------- main --------
@@ -251,14 +257,22 @@ class BSA(object):
 
 if __name__ == "__main__":
     parser = ArgumentParser(
-        description = 'bsa.py (v0.0.1)',
-        epilog = "sfmunoz (C) 2026",
+        description="bsa.py (v0.0.1)",
+        epilog="sfmunoz (C) 2026",
     )
 
-    parser.add_argument('-d', '--debug', action='store_true',
-                        help='enable debug mode',)
-    parser.add_argument('-n', '--dry-run', action='store_true',
-                        help='enable dry run mode (no API call)',)
+    parser.add_argument(
+        "-d",
+        "--debug",
+        action="store_true",
+        help="enable debug mode",
+    )
+    parser.add_argument(
+        "-n",
+        "--dry-run",
+        action="store_true",
+        help="enable dry run mode (no API call)",
+    )
 
     args = parser.parse_args()
 
