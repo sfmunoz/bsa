@@ -19,6 +19,10 @@
 #   - BSA class must be the last one in the file
 #   - run() method must be the last one if the class implements it
 #   - for multiline dictionaries, function calls, etc. the last always has a trailing comma
+# - Types:
+#   - Every method or function argument must have a type
+#   - Every method or function return value must have a type
+#   - Every new variable must have a type
 #
 # }}}
 # {{{ Changes
@@ -76,6 +80,7 @@
 #   - Every argument of every method must have the type defined
 #   - Every return value of every method must have the type defined
 #   - 'uvx ty check' must finish without warnings/errors
+# [ ] Add type to every defined variable
 # [ ] Multi-model support (to be detailed)
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
