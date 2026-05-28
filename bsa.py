@@ -72,7 +72,7 @@
 #   - Make sure the last line of the model response is exactly "```" (without quotes). Exception otherwise
 #   - Remove both the first and the last line
 #   - Do this in a new single method
-# [ ] Add type to every argument and return value:
+# [X] Add type to every argument and return value:
 #   - Every argument of every method must have the type defined
 #   - Every return value of every method must have the type defined
 #   - 'uvx ty check' must finish without warnings/errors
@@ -90,8 +90,9 @@ import os
 import json
 import sys
 import urllib.request
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from logging import getLogger, basicConfig, INFO, DEBUG
+from typing import Tuple
 
 basicConfig(
     format="%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(message)s",
@@ -109,7 +110,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.__init__()
 
-    def __init__(self, args):
+    def __init__(self, args: Namespace) -> None:
         log.info("OpenCodeGoDeepSeekV4Flash.__init__()")
         self.__args = args
         self.__api_key: str = os.environ.get("OPENCODE_GO_API_KEY", "")
@@ -120,7 +121,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.__call_api()
 
-    def __call_api(self, prompt):
+    def __call_api(self, prompt: str) -> dict:
         payload = {
             "model": "deepseek-v4-flash",
             "messages": [{"role": "user", "content": prompt}],
@@ -143,7 +144,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.__read_self()
 
-    def __read_self(self):
+    def __read_self(self) -> str:
         script_path = os.path.realpath(__file__)
         with open(script_path, "r") as f:
             return f.read()
@@ -151,7 +152,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.__write_self()
 
-    def __write_self(self, content):
+    def __write_self(self, content: str) -> None:
         script_path = os.path.realpath(__file__)
         log.info("Writing model output to %s", script_path)
         with open(script_path, "w") as f:
@@ -160,7 +161,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.__prepare_prompt()
 
-    def __prepare_prompt(self):
+    def __prepare_prompt(self) -> Tuple[bool, str]:
         is_self = sys.stdin.isatty()
         if is_self:
             log.info("No stdin pipe, reading self for script-in")
@@ -175,7 +176,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.__debug_prompt()
 
-    def __debug_prompt(self, prompt):
+    def __debug_prompt(self, prompt: str) -> None:
         if self.__args.debug:
             for line in prompt.splitlines():
                 log.debug(line)
@@ -183,7 +184,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.__debug_response()
 
-    def __debug_response(self, api_response):
+    def __debug_response(self, api_response: dict) -> None:
         if self.__args.debug:
             formatted = json.dumps(api_response, indent=2, sort_keys=True)
             for line in formatted.splitlines():
@@ -192,7 +193,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.__verify_and_strip_markup()
 
-    def __verify_and_strip_markup(self, content):
+    def __verify_and_strip_markup(self, content: str) -> str:
         lines = content.splitlines()
         if not lines:
             raise ValueError("Model response is empty")
@@ -207,7 +208,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.__write_output()
 
-    def __write_output(self, content, is_self):
+    def __write_output(self, content: str, is_self: bool) -> None:
         if is_self:
             self.__write_self(content)
         else:
@@ -216,7 +217,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
     # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.run()
 
-    def run(self):
+    def run(self) -> None:
         log.info("OpenCodeGoDeepSeekV4Flash.run()")
         is_self, prompt = self.__prepare_prompt()
         self.__debug_prompt(prompt)
@@ -243,14 +244,14 @@ class BSA(object):
     # }}}
     # {{{ BSA.__init__()
 
-    def __init__(self, args):
+    def __init__(self, args: Namespace) -> None:
         log.info("BSA.__init__()")
         self.__args = args
 
     # }}}
     # {{{ BSA.run()
 
-    def run(self):
+    def run(self) -> None:
         log.info("BSA.run()")
         OpenCodeGoDeepSeekV4Flash(self.__args).run()
 
