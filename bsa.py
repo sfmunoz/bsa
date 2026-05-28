@@ -14,7 +14,9 @@
 # - Don't add comments unless it is unavoidable to describe some critical part
 # - Apply what's defined in the Changes section
 #   - [X] Marks a completed change — skip it
-#   - [ ] Marks a pending change — process only the first one
+#   - [ ] Marks a pending change
+#         - Process only the first one
+#         - Mark it as completed when it's processed
 # - Code conventions:
 #   - BSA class must be the last one in the file
 #   - run() method must be the last one if the class implements it
