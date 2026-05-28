@@ -81,7 +81,7 @@
 #   - Every return value of every method must have the type defined
 #   - 'uvx ty check' must finish without warnings/errors
 # [X] Add type to every defined variable
-# [ ] Remove stdin read support and stdout write support
+# [X] Remove stdin read support and stdout write support
 #     - Remove stdin read support: keep only file-based processing
 #     - Remove stdout write support: keep only file-based writing
 # [ ] Multi-model support (to be detailed)
@@ -94,12 +94,13 @@
 # --------------------------------------
 # {{{ imports
 
-import os
 import json
+import os
 import sys
 import urllib.request
 from argparse import ArgumentParser, Namespace
 from logging import getLogger, basicConfig, INFO, DEBUG, Logger
+
 basicConfig(
     format="%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(message)s",
     level=INFO,
@@ -111,6 +112,7 @@ log: Logger = getLogger(__name__)
 # -------- Prompt(object) -- class --------
 # {{{ Prompt -- class
 
+
 class Prompt(object):
     # }}}
     # {{{ Prompt.__init__()
@@ -118,7 +120,6 @@ class Prompt(object):
     def __init__(self) -> None:
         log.info("Prompt.__init__()")
         self.__path: str = os.path.realpath(__file__)
-        self.__from_stdin: bool = not sys.stdin.isatty()
 
     # }}}
     # {{{ Prompt.__read_self()
@@ -131,21 +132,8 @@ class Prompt(object):
     # {{{ Prompt.build()
 
     def build(self) -> str:
-        if self.__from_stdin:
-            prompt: str = sys.stdin.read()
-            if not prompt.strip():
-                log.error("No input data on stdin")
-                sys.exit(1)
-            return prompt
         log.info("No stdin pipe, reading self for script-in")
         return self.__read_self()
-
-    # }}}
-    # {{{ Prompt.from_self
-
-    @property
-    def from_self(self) -> bool:
-        return not self.__from_stdin
 
 
 # }}}
@@ -230,22 +218,12 @@ class OpenCodeGoDeepSeekV4Flash(object):
         return stripped
 
     # }}}
-    # {{{ OpenCodeGoDeepSeekV4Flash.__write_output()
-
-    def __write_output(self, content: str, is_self: bool) -> None:
-        if is_self:
-            self.__write_self(content)
-        else:
-            sys.stdout.write(content)
-
-    # }}}
     # {{{ OpenCodeGoDeepSeekV4Flash.run()
 
     def run(self) -> None:
         log.info("OpenCodeGoDeepSeekV4Flash.run()")
         prompt_obj: Prompt = Prompt()
         prompt: str = prompt_obj.build()
-        is_self: bool = prompt_obj.from_self
         self.__debug_prompt(prompt)
         if self.__args.dry_run:
             log.info("Dry-run mode enabled; no API call will be made.")
@@ -258,7 +236,7 @@ class OpenCodeGoDeepSeekV4Flash(object):
         except ValueError as e:
             log.error("Response markup verification failed: %s", e)
             sys.exit(1)
-        self.__write_output(content, is_self)
+        self.__write_self(content)
 
 
 # }}}
