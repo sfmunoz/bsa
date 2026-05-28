@@ -7,8 +7,6 @@
 # - The only file to change is this one: nothing else
 # - The only input provided to the model is this file: nothing else
 # - The only output returned by the model must be the updated file: nothing else
-#   - Don't include markup at the top (e.g. "```python")
-#   - Don't include markup at the bottom (e.g. "```")
 # - Keep the file style as it is when you make changes
 # - Methods must have fewer than 25 lines -> create other methods as required
 # - Don't create standalone functions -> everything must be contained in classes
@@ -69,6 +67,11 @@
 #     - When enabled no interaction with the model is carried out
 #       - Program stops right before that moment
 #       - It must show a message explaining dry-run flag is on
+# [ ] Verify and remove python markup
+#   - Make sure the first line of the model response is exactly "```python" (without quotes). Exception otherwise
+#   - Make sure the last line of the model response is exactly "```" (without quotes). Exception otherwise
+#   - Remove both the first and the last line
+#   - Do this in a new single method
 # [ ] Multi-model support (to be detailed)
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
