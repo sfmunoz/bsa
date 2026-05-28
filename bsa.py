@@ -74,14 +74,14 @@
 #       - Program stops right before that moment
 #       - It must show a message explaining dry-run flag is on
 # [X] Verify and remove python markup
-#   - Make sure the first line of the model response is exactly "```python" (without quotes). Exception otherwise
-#   - Make sure the last line of the model response is exactly "```" (without quotes). Exception otherwise
-#   - Remove both the first and the last line
-#   - Do this in a new single method
+#     - Make sure the first line of the model response is exactly "```python" (without quotes). Exception otherwise
+#     - Make sure the last line of the model response is exactly "```" (without quotes). Exception otherwise
+#     - Remove both the first and the last line
+#     - Do this in a new single method
 # [X] Add type to every argument and return value:
-#   - Every argument of every method must have the type defined
-#   - Every return value of every method must have the type defined
-#   - 'uvx ty check' must finish without warnings/errors
+#     - Every argument of every method must have the type defined
+#     - Every return value of every method must have the type defined
+#     - 'uvx ty check' must finish without warnings/errors
 # [X] Add type to every defined variable
 # [X] Remove stdin read support and stdout write support
 #     - Remove stdin read support: keep only file-based processing
