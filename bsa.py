@@ -99,9 +99,22 @@
 #       - mimo-v2.5
 #       - mimo-v2.5-pro
 #     - OpenAIModel must use the '-m/--model' value instead of current hardcoded value
-# [ ] Deep code review
+# [X] Deep code review
 #     - Review every detail of the code
 #     - Propose the 3 most important changes right after this 'Deep code review' item
+# [ ] Replace sys.exit() calls in business logic with exceptions
+#     - OpenAIModel.__init__() calls sys.exit(1) when API key is missing
+#     - OpenAIModel.run() calls sys.exit(0) for dry-run and sys.exit(1) for markup failure
+#     - Define a custom BSAError exception class
+#     - Raise BSAError instead of calling sys.exit() in all business logic
+#     - Catch exceptions in the main block and call sys.exit() there
+# [ ] Add basic HTTP error handling in __call_api
+#     - Wrap urllib.request.urlopen() in try/except for urllib.error.HTTPError and urllib.error.URLError
+#     - Log the error details (status code, reason, body if available)
+#     - Raise BSAError on failure
+# [ ] Extract hardcoded strings to class constants
+#     - Move API endpoint URL to OpenAIModel._ENDPOINT class attribute
+#     - Move user-agent string to OpenAIModel._USER_AGENT class attribute
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
 # [ ] Stream support when interacting with the model
