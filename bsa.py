@@ -89,6 +89,16 @@
 # [X] Multi-model support preparation
 #     - Rename OpenCodeGoDeepSeekV4Flash() to OpenAIModel()
 # [ ] Multi-model support
+#     - Add -m/--model command line argument with the following choices
+#       - deepseek-v4-flash -> default model to use
+#       - deepseek-v4-pro
+#       - glm-5
+#       - glm-5.1
+#       - kimi-k2.5
+#       - kimi-k2.6
+#       - mimo-v2.5
+#       - mimo-v2.5-pro
+#     - OpenAIModel must use the '-m/--model' value instead of current hardcoded value
 # [ ] Auto-modification support applying the patch (to be detailed)
 # [ ] Auto-commit support (to be detailed)
 # [ ] Stream support when interacting with the model
