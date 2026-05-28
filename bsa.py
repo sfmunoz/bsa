@@ -102,6 +102,9 @@
 # [X] Deep code review
 #     - Review every detail of the code
 #     - Propose the 3 most important changes right after this 'Deep code review' item
+# [ ] Change model output processing:
+#     - Now: check first line is "```python" and last line is "```" and delete them
+#     - New: check there's a line "```python" and  a line "```" and grab the code between these marks
 # [ ] Replace sys.exit() calls in business logic with exceptions
 #     - OpenAIModel.__init__() calls sys.exit(1) when API key is missing
 #     - OpenAIModel.run() calls sys.exit(0) for dry-run and sys.exit(1) for markup failure
